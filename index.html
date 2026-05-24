@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Xin Suhan - CS / AI student learning programming, web development, AI, and project practice.">
-  <title>Xin Suhan | CS / AI Student</title>
+  <meta name="description" content="Xin Suhan - CS / AI student learning programming, web development, AI, and project practice." data-i18n="metaDescription">
+  <title data-i18n="pageTitle">Xin Suhan | CS / AI Student</title>
   <link rel="shortcut icon" href="favicon.ico">
   <style>
     :root {
@@ -585,8 +585,8 @@
             >
           </a>
           <div class="academic-body">
-            <span class="tag">MCM / ICM</span>
-            <h3>2026 MCM/ICM — Honorable Mention</h3>
+            <span class="tag" data-i18n="mcmTag">MCM / ICM</span>
+            <h3 data-i18n="mcmTitle">2026 MCM/ICM — Honorable Mention</h3>
             <p class="academic-description" data-i18n="mcmDescription">
               Awarded Honorable Mention in the 2026 Mathematical Contest in
               Modeling for research on voting fairness and reconstruction in
@@ -613,7 +613,7 @@
           </a>
           <div class="academic-body">
             <span class="tag" data-i18n="courseworkTag">Coursework</span>
-            <h3>Calculus I — Perfect Score</h3>
+            <h3 data-i18n="calculusTitle">Calculus I — Perfect Score</h3>
             <p class="academic-subtitle" data-i18n="calculusSubtitle">Only full score in the entire freshman cohort</p>
             <p class="academic-description" data-i18n="calculusDescription">
               Achieved 100/100 in Calculus I during freshman year at Sichuan
@@ -670,7 +670,7 @@
 
         <article class="project-card">
           <span class="tag" data-i18n="playableTag">Playable</span>
-          <h3>Hextris</h3>
+          <h3 data-i18n="hextrisTitle">Hextris</h3>
           <p data-i18n="hextrisDescription">
             A fast browser puzzle game integrated from Hextris/hextris, with
             upstream credits and GPL license notices preserved.
@@ -681,7 +681,7 @@
 
         <article class="project-card">
           <span class="tag" data-i18n="playableTag">Playable</span>
-          <h3>A Dark Room</h3>
+          <h3 data-i18n="darkRoomTitle">A Dark Room</h3>
           <p data-i18n="darkRoomDescription">
             A minimalist text adventure integrated from
             doublespeakgames/adarkroom, with upstream credits and MPL license
@@ -695,21 +695,21 @@
 
     <section id="contact" aria-labelledby="contact-title">
       <div class="section-head">
-        <h2 id="contact-title">Contact</h2>
-        <p>Reach me through email, GitHub, or this personal website.</p>
+        <h2 id="contact-title" data-i18n="contactTitle">Contact</h2>
+        <p data-i18n="contactDescription">Reach me through email, GitHub, or this personal website.</p>
       </div>
 
       <div class="contact">
         <div class="contact-item">
-          <span>Email</span>
+          <span data-i18n="contactEmailLabel">Email</span>
           <a href="mailto:xinsuhan@gmail.com">xinsuhan@gmail.com</a>
         </div>
         <div class="contact-item">
-          <span>GitHub</span>
+          <span data-i18n="contactGitHubLabel">GitHub</span>
           <a href="https://github.com/xinsuhan">github.com/xinsuhan</a>
         </div>
         <div class="contact-item">
-          <span>Website</span>
+          <span data-i18n="contactWebsiteLabel">Website</span>
           <strong>xinsuhan.top</strong>
         </div>
       </div>
@@ -717,7 +717,197 @@
   </main>
 
   <footer>
-    <div class="site">© 2026 Xin Suhan. Built with plain HTML and CSS.</div>
+    <div class="site" data-i18n="footerText">© 2026 Xin Suhan. Built with plain HTML and CSS.</div>
   </footer>
+  <script>
+    (function () {
+      const STORAGE_KEY = "homeLanguage";
+      const translations = {
+        en: {
+          pageTitle: "Xin Suhan | CS / AI Student",
+          metaDescription: "Xin Suhan - CS / AI student learning programming, web development, AI, and project practice.",
+          navAcademic: "Academic",
+          navGames: "Games",
+          navContact: "Contact",
+          navGitHub: "GitHub",
+          heroEyebrow: "CS / AI Student",
+          heroTitle: "Building with code, web ideas, and AI.",
+          heroIntro:
+            "I am learning programming, web development, artificial intelligence, and hands-on project practice. This site collects small projects, experiments, coursework, and notes as I grow as a developer.",
+          buttonPlay2048: "Play 2048",
+          buttonBrowseGames: "Browse Games",
+          buttonViewGitHub: "View GitHub",
+          buttonEmailMe: "Email Me",
+          profileDescription:
+            "A computer science learner exploring AI, practical software projects, and clean web experiences.",
+          profileStatCs: "Programming foundations",
+          profileStatAi: "Models and applications",
+          profileStatWeb: "HTML, CSS, JavaScript",
+          profileStatPractice: "Projects and coursework",
+          academicTitle: "Academic Highlights",
+          academicDescription:
+            "Selected academic results from modeling, mathematics, and research practice.",
+          mcmTag: "MCM / ICM",
+          mcmTitle: "2026 MCM/ICM — Honorable Mention",
+          mcmDescription:
+            "Awarded Honorable Mention in the 2026 Mathematical Contest in Modeling for research on voting fairness and reconstruction in Dancing with the Stars.",
+          buttonViewCertificate: "View Certificate",
+          buttonReadPaper: "Read Paper",
+          courseworkTag: "Coursework",
+          calculusTitle: "Calculus I — Perfect Score",
+          calculusSubtitle: "Only full score in the entire freshman cohort",
+          calculusDescription: "Achieved 100/100 in Calculus I during freshman year at Sichuan University.",
+          gamesTitle: "Games / Projects",
+          gamesDescription:
+            "Browser games and small web experiments collected under this personal GitHub Pages site.",
+          playableTag: "Playable",
+          game2048Title: "2048 Game",
+          game2048Description:
+            "The original 2048 browser game is preserved here with keyboard controls, scoring, best score, and restart support.",
+          path2048: "Path: /2048",
+          snakeTitle: "Snake",
+          snakeDescription:
+            "A classic grid movement game integrated from patorjk/JavaScript-Snake, with upstream credits and MIT license notices preserved.",
+          pathSnake: "Path: /snake",
+          buttonPlaySnake: "Play Snake",
+          minesweeperTitle: "Minesweeper",
+          minesweeperDescription:
+            "A classic minesweeper puzzle integrated from sergiss/minesweeper, with upstream credits and MIT license notices preserved.",
+          pathMinesweeper: "Path: /minesweeper",
+          buttonPlayMinesweeper: "Play Minesweeper",
+          hextrisTitle: "Hextris",
+          hextrisDescription:
+            "A fast browser puzzle game integrated from Hextris/hextris, with upstream credits and GPL license notices preserved.",
+          pathHextris: "Path: /hextris",
+          buttonPlayHextris: "Play Hextris",
+          darkRoomTitle: "A Dark Room",
+          darkRoomDescription:
+            "A minimalist text adventure integrated from doublespeakgames/adarkroom, with upstream credits and MPL license notices preserved.",
+          pathDarkRoom: "Path: /dark-room",
+          buttonPlayDarkRoom: "Play A Dark Room",
+          contactTitle: "Contact",
+          contactDescription: "Reach me through email, GitHub, or this personal website.",
+          contactEmailLabel: "Email",
+          contactGitHubLabel: "GitHub",
+          contactWebsiteLabel: "Website",
+          footerText: "© 2026 Xin Suhan. Built with plain HTML and CSS."
+        },
+        zh: {
+          pageTitle: "辛苏涵 | CS / AI 学生",
+          metaDescription: "辛苏涵 - 计算机与 AI 学生，学习编程、Web 开发、人工智能与项目实践。",
+          navAcademic: "学术",
+          navGames: "游戏",
+          navContact: "联系",
+          navGitHub: "GitHub",
+          heroEyebrow: "CS / AI 学生",
+          heroTitle: "用代码、Web 与 AI 构建想法。",
+          heroIntro:
+            "我在学习编程、Web 开发、人工智能与项目实践。本网站收录我成长过程中的小项目、实验、课程与笔记。",
+          buttonPlay2048: "开始 2048",
+          buttonBrowseGames: "浏览游戏",
+          buttonViewGitHub: "查看 GitHub",
+          buttonEmailMe: "给我发邮件",
+          profileDescription: "计算机科学学习者，探索 AI、实用软件项目与简洁的 Web 体验。",
+          profileStatCs: "编程基础",
+          profileStatAi: "模型与应用",
+          profileStatWeb: "HTML、CSS、JavaScript",
+          profileStatPractice: "项目与课程",
+          academicTitle: "学术亮点",
+          academicDescription: "来自建模、数学与科研实践的部分成果。",
+          mcmTag: "MCM / ICM",
+          mcmTitle: "2026 MCM/ICM — 优秀奖",
+          mcmDescription:
+            "在 2026 年美国大学生数学建模竞赛中获得优秀奖，研究主题为《与星共舞》的投票公平与重建。",
+          buttonViewCertificate: "查看证书",
+          buttonReadPaper: "阅读论文",
+          courseworkTag: "课程",
+          calculusTitle: "微积分 I — 满分",
+          calculusSubtitle: "全新生唯一满分",
+          calculusDescription: "在四川大学大一学年取得微积分 I 100/100。",
+          gamesTitle: "游戏 / 项目",
+          gamesDescription: "收录在个人 GitHub Pages 下的浏览器游戏与小型 Web 实验。",
+          playableTag: "可游玩",
+          game2048Title: "2048 游戏",
+          game2048Description: "保留原版 2048 浏览器游戏，支持键盘操控、计分、最高分与重开。",
+          path2048: "路径：/2048",
+          snakeTitle: "贪吃蛇",
+          snakeDescription:
+            "集成自 patorjk/JavaScript-Snake 的经典网格移动游戏，保留上游署名与 MIT 许可声明。",
+          pathSnake: "路径：/snake",
+          buttonPlaySnake: "开始贪吃蛇",
+          minesweeperTitle: "扫雷",
+          minesweeperDescription:
+            "集成自 sergiss/minesweeper 的经典扫雷游戏，保留上游署名与 MIT 许可声明。",
+          pathMinesweeper: "路径：/minesweeper",
+          buttonPlayMinesweeper: "开始扫雷",
+          hextrisTitle: "Hextris",
+          hextrisDescription:
+            "集成自 Hextris/hextris 的高速益智游戏，保留上游署名与 GPL 许可声明。",
+          pathHextris: "路径：/hextris",
+          buttonPlayHextris: "开始 Hextris",
+          darkRoomTitle: "A Dark Room",
+          darkRoomDescription:
+            "集成自 doublespeakgames/adarkroom 的极简文字冒险游戏，保留上游署名与 MPL 许可声明。",
+          pathDarkRoom: "路径：/dark-room",
+          buttonPlayDarkRoom: "开始 A Dark Room",
+          contactTitle: "联系",
+          contactDescription: "可通过邮件、GitHub 或个人网站联系我。",
+          contactEmailLabel: "邮箱",
+          contactGitHubLabel: "GitHub",
+          contactWebsiteLabel: "网站",
+          footerText: "© 2026 辛苏涵。使用原生 HTML 与 CSS 构建。"
+        }
+      };
+
+      const buttons = Array.from(document.querySelectorAll("[data-lang-option]"));
+
+      function normalizeLang(value) {
+        return value === "zh" ? "zh" : "en";
+      }
+
+      function applyTranslations(lang) {
+        const dictionary = translations[lang] || translations.en;
+        document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
+        document.querySelectorAll("[data-i18n]").forEach((element) => {
+          const key = element.getAttribute("data-i18n");
+          const text = dictionary[key];
+          if (!text) {
+            return;
+          }
+          if (element.tagName === "META") {
+            element.setAttribute("content", text);
+          } else {
+            element.textContent = text;
+          }
+        });
+
+        buttons.forEach((button) => {
+          const isActive = button.getAttribute("data-lang-option") === lang;
+          button.classList.toggle("active", isActive);
+          button.setAttribute("aria-pressed", isActive ? "true" : "false");
+        });
+      }
+
+      function setLanguage(lang, persist) {
+        const normalized = normalizeLang(lang);
+        applyTranslations(normalized);
+        if (persist) {
+          localStorage.setItem(STORAGE_KEY, normalized);
+        }
+      }
+
+      const stored = localStorage.getItem(STORAGE_KEY);
+      const browserLang = (navigator.language || "").toLowerCase().startsWith("zh") ? "zh" : "en";
+      const initialLang = stored ? normalizeLang(stored) : browserLang;
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          setLanguage(button.getAttribute("data-lang-option"), true);
+        });
+      });
+
+      setLanguage(initialLang, false);
+    })();
+  </script>
 </body>
 </html>
