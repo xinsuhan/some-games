@@ -1,6 +1,13 @@
+<<<<<<< HEAD
 ﻿.sass-cache/
 .vercel
 .env
 .env.local
 .env.*.local
 
+=======
+.sass-cache/
+.env
+.env.local
+.env.*.local
+>>>>>>> 367bd0b (Add Qwen OCR support and improve AI chat experience)

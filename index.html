@@ -465,12 +465,15 @@
       border-color: #f2c5c5;
     }
 
+<<<<<<< HEAD
     .ai-message.thinking {
       background: #fffaf0;
       border-color: #f3d28a;
       color: #7a4b00;
     }
 
+=======
+>>>>>>> 367bd0b (Add Qwen OCR support and improve AI chat experience)
     .ai-form {
       display: flex;
       gap: 12px;
@@ -495,6 +498,7 @@
       border-color: var(--primary);
     }
 
+<<<<<<< HEAD
     .ai-file-input {
       position: absolute;
       width: 1px;
@@ -508,6 +512,8 @@
       color: var(--muted);
       font-size: 13px;
     }
+=======
+>>>>>>> 367bd0b (Add Qwen OCR support and improve AI chat experience)
     .contact {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
@@ -621,6 +627,10 @@
       .academic-description {
         font-size: 16px;
       }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 367bd0b (Add Qwen OCR support and improve AI chat experience)
       .ai-form {
         flex-direction: column;
       }
@@ -916,7 +926,10 @@
             Hi, I can answer questions about this website and its projects.
           </p>
         </div>
+<<<<<<< HEAD
         <div class="ai-file-status" id="ai-file-status" aria-live="polite"></div>
+=======
+>>>>>>> 367bd0b (Add Qwen OCR support and improve AI chat experience)
         <form class="ai-form" id="ai-form">
           <input
             class="ai-input"
@@ -928,14 +941,21 @@
             data-i18n-placeholder="aiPlaceholder"
             placeholder="Ask something about this site..."
           >
+<<<<<<< HEAD
           <input class="ai-file-input" id="ai-file" type="file" accept=".txt,.md,text/plain,text/markdown">
           <label class="button" for="ai-file" data-i18n="aiAttachFile">Attach .txt / .md</label>
           <input class="ai-file-input" id="ai-image" type="file" accept="image/png,image/jpeg,image/webp">
           <label class="button" for="ai-image" data-i18n="aiAttachImage">OCR Image</label>
+=======
+>>>>>>> 367bd0b (Add Qwen OCR support and improve AI chat experience)
           <button class="button primary" type="submit" id="ai-send" data-i18n="aiSend">Send</button>
         </form>
       </div>
     </section>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 367bd0b (Add Qwen OCR support and improve AI chat experience)
     <section id="contact" aria-labelledby="contact-title">
       <div class="section-head">
         <h2 id="contact-title" data-i18n="contactTitle">Contact</h2>
@@ -1073,6 +1093,7 @@
           aiWelcome: "Hi, I can answer questions about this website and its projects.",
           aiPlaceholder: "Ask something about this site...",
           aiSend: "Send",
+<<<<<<< HEAD
           aiAttachFile: "Attach .txt / .md",
           aiFileReady: "Attached: {name}",
           aiFileTooLarge: "File is too large. Please upload a .txt or .md file under 1MB.",
@@ -1093,6 +1114,11 @@
           aiThinkingUploads: "Organizing uploaded content...",
           aiThinkingElapsed: "Waiting {seconds}s",
           aiError: "The AI service is temporarily unavailable. Please try again later.",          contactTitle: "Contact",
+=======
+          aiThinking: "Thinking...",
+          aiError: "The AI service is temporarily unavailable. Please try again later.",
+          contactTitle: "Contact",
+>>>>>>> 367bd0b (Add Qwen OCR support and improve AI chat experience)
           contactDescription: "Reach me through email, GitHub, or this personal website.",
           contactNote: "Open to learning projects, collaboration, and technical discussions.",
           contactEmailLabel: "Email",
@@ -1202,6 +1228,7 @@
           aiWelcome: "你好，我可以回答关于这个网站和项目的问题。",
           aiPlaceholder: "输入你想问的问题...",
           aiSend: "发送",
+<<<<<<< HEAD
           aiAttachFile: "上传 .txt / .md",
           aiFileReady: "已上传：{name}",
           aiFileTooLarge: "文件太大，请上传 1MB 以内的 .txt 或 .md 文件。",
@@ -1222,6 +1249,11 @@
           aiThinkingUploads: "正在整理上传内容...",
           aiThinkingElapsed: "已等待 {seconds} 秒",
           aiError: "AI 服务暂时不可用，请稍后再试。",          contactTitle: "联系",
+=======
+          aiThinking: "正在思考...",
+          aiError: "AI 服务暂时不可用，请稍后再试。",
+          contactTitle: "联系",
+>>>>>>> 367bd0b (Add Qwen OCR support and improve AI chat experience)
           contactDescription: "可通过邮件、GitHub 或个人网站联系我。",
           contactNote: "欢迎交流学习项目、合作想法和技术问题。",
           contactEmailLabel: "邮箱",
@@ -1245,6 +1277,10 @@
         const dictionary = translations[currentLang()] || translations.en;
         return dictionary[key] || translations.en[key] || "";
       }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 367bd0b (Add Qwen OCR support and improve AI chat experience)
       function applyTranslations(lang) {
         const dictionary = translations[lang] || translations.en;
         document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
@@ -1258,6 +1294,13 @@
             element.setAttribute("content", text);
           } else {
             element.textContent = text;
+          }
+        });
+        document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
+          const key = element.getAttribute("data-i18n-placeholder");
+          const text = dictionary[key];
+          if (text) {
+            element.setAttribute("placeholder", text);
           }
         });
 
@@ -1297,6 +1340,7 @@
       const form = document.getElementById("ai-form");
       const input = document.getElementById("ai-input");
       const sendButton = document.getElementById("ai-send");
+<<<<<<< HEAD
       const fileInput = document.getElementById("ai-file");
       const imageInput = document.getElementById("ai-image");
       const fileStatus = document.getElementById("ai-file-status");
@@ -1428,10 +1472,21 @@
         if (shouldRender) {
           applyMathRender(message);
         }
+=======
+      const MAX_OCR_CONTEXT_LENGTH = 3000;
+      const CHAT_TIMEOUT_MESSAGE = "AI 响应超时，请缩短问题或重新尝试。";
+
+      function addMessage(text, type) {
+        const message = document.createElement("p");
+        message.className = `ai-message ${type || ""}`.trim();
+        message.textContent = text;
+        chat.appendChild(message);
+>>>>>>> 367bd0b (Add Qwen OCR support and improve AI chat experience)
         chat.scrollTop = chat.scrollHeight;
         return message;
       }
 
+<<<<<<< HEAD
       function getThinkingStage(elapsedSeconds) {
         if (fileContext && fileContext.content) {
           return t("aiThinkingUploads");
@@ -1584,6 +1639,20 @@
           });
           reader.readAsDataURL(file);
         });
+=======
+      function getOcrFileContext() {
+        const rawFromWindow = typeof window.fileContext === "string" ? window.fileContext : "";
+        const contextElement = document.getElementById("ai-file-context");
+        const rawFromElement = contextElement
+          ? contextElement.value || contextElement.textContent || ""
+          : "";
+        const rawContext = rawFromWindow || rawFromElement;
+        const trimmed = rawContext.trim();
+        if (!trimmed) {
+          return "";
+        }
+        return trimmed.slice(0, MAX_OCR_CONTEXT_LENGTH);
+>>>>>>> 367bd0b (Add Qwen OCR support and improve AI chat experience)
       }
 
       if (form && chat && input && sendButton) {
@@ -1594,6 +1663,7 @@
             return;
           }
 
+<<<<<<< HEAD
           addMessage(message, "user", false);
           input.value = "";
           input.disabled = true;
@@ -1602,11 +1672,27 @@
           const history = conversationMessages.slice();
 
           try {
+=======
+          addMessage(message, "user");
+          input.value = "";
+          input.disabled = true;
+          sendButton.disabled = true;
+          const thinking = addMessage(t("aiThinking"));
+
+          try {
+            const fileContext = getOcrFileContext();
+            const payload = { message };
+            if (fileContext) {
+              payload.fileContext = fileContext;
+            }
+
+>>>>>>> 367bd0b (Add Qwen OCR support and improve AI chat experience)
             const response = await fetch("/api/chat", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json"
               },
+<<<<<<< HEAD
               body: JSON.stringify({ message, history, fileContext })
             });
 
@@ -1615,10 +1701,38 @@
             }
 
             const data = await response.json();
+=======
+              body: JSON.stringify(payload)
+            });
+
+            let data = null;
+            try {
+              data = await response.json();
+            } catch (parseError) {
+              data = null;
+            }
+
+            if (!response.ok) {
+              if (data && data.error === "chat_timeout") {
+                thinking.textContent = CHAT_TIMEOUT_MESSAGE;
+                thinking.classList.add("error");
+                return;
+              }
+              throw new Error("Chat request failed");
+            }
+
+            if (data && data.error === "chat_timeout") {
+              thinking.textContent = CHAT_TIMEOUT_MESSAGE;
+              thinking.classList.add("error");
+              return;
+            }
+
+>>>>>>> 367bd0b (Add Qwen OCR support and improve AI chat experience)
             if (!data.reply) {
               throw new Error("Empty chat response");
             }
 
+<<<<<<< HEAD
             stopThinkingStatus();
             setMessageContent(thinking, data.reply, true);
             conversationMessages.push(
@@ -1629,6 +1743,11 @@
           } catch (error) {
             stopThinkingStatus();
             setMessageContent(thinking, t("aiError"), false);
+=======
+            thinking.textContent = data.reply;
+          } catch (error) {
+            thinking.textContent = t("aiError");
+>>>>>>> 367bd0b (Add Qwen OCR support and improve AI chat experience)
             thinking.classList.add("error");
           } finally {
             input.disabled = false;
@@ -1637,6 +1756,10 @@
           }
         });
       }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 367bd0b (Add Qwen OCR support and improve AI chat experience)
       setLanguage(initialLang, false);
     })();
   </script>
