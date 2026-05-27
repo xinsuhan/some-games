@@ -1233,6 +1233,15 @@
       const form = document.getElementById("ai-form");
       const input = document.getElementById("ai-input");
       const sendButton = document.getElementById("ai-send");
+      const conversationMessages = [];
+      const MAX_HISTORY_TURNS = 6;
+
+      function trimConversationHistory() {
+        const maxMessages = MAX_HISTORY_TURNS * 2;
+        if (conversationMessages.length > maxMessages) {
+          conversationMessages.splice(0, conversationMessages.length - maxMessages);
+        }
+      }
 
       function addMessage(text, type) {
         const message = document.createElement("p");
@@ -1256,6 +1265,7 @@
           input.disabled = true;
           sendButton.disabled = true;
           const thinking = addMessage(t("aiThinking"));
+          const history = conversationMessages.slice();
 
           try {
             const response = await fetch("/api/chat", {
@@ -1263,7 +1273,7 @@
               headers: {
                 "Content-Type": "application/json"
               },
-              body: JSON.stringify({ message })
+              body: JSON.stringify({ message, history })
             });
 
             if (!response.ok) {
@@ -1276,6 +1286,11 @@
             }
 
             thinking.textContent = data.reply;
+            conversationMessages.push(
+              { role: "user", content: message },
+              { role: "assistant", content: data.reply }
+            );
+            trimConversationHistory();
           } catch (error) {
             thinking.textContent = t("aiError");
             thinking.classList.add("error");

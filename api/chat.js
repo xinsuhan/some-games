@@ -1,5 +1,8 @@
 const DEEPSEEK_API_URL = "https://api.deepseek.com/chat/completions";
 const MAX_MESSAGE_LENGTH = 1000;
+const MAX_HISTORY_TURNS = 6;
+const MAX_HISTORY_MESSAGES = MAX_HISTORY_TURNS * 2;
+const ALLOWED_HISTORY_ROLES = new Set(["user", "assistant"]);
 
 const systemPrompt = `你是 xinsuhan.top 的网站 AI 助手。请用简洁、友好的中文回答用户问题。你可以介绍这个网站、站长的项目、学习方向和页面内容，但不要编造不存在的信息。
 
@@ -79,6 +82,37 @@ function parseBody(body) {
   return body || {};
 }
 
+function normalizeHistory(history) {
+  if (history === undefined) {
+    return [];
+  }
+
+  if (!Array.isArray(history)) {
+    throw new Error("History must be an array");
+  }
+
+  return history
+    .slice(-MAX_HISTORY_MESSAGES)
+    .map((item) => {
+      if (!item || typeof item !== "object") {
+        throw new Error("Invalid history item");
+      }
+
+      const role = item.role;
+      const content = typeof item.content === "string" ? item.content.trim() : "";
+
+      if (!ALLOWED_HISTORY_ROLES.has(role) || !content) {
+        throw new Error("Invalid history item");
+      }
+
+      if (content.length > MAX_MESSAGE_LENGTH) {
+        throw new Error("History message is too long");
+      }
+
+      return { role, content };
+    });
+}
+
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
@@ -86,9 +120,11 @@ module.exports = async function handler(req, res) {
   }
 
   let message;
+  let historyMessages;
   try {
     const body = parseBody(req.body);
     message = typeof body.message === "string" ? body.message.trim() : "";
+    historyMessages = normalizeHistory(body.history);
   } catch (error) {
     return res.status(400).json({ error: "Invalid request body" });
   }
@@ -119,6 +155,7 @@ module.exports = async function handler(req, res) {
             role: "system",
             content: systemPrompt
           },
+          ...historyMessages,
           {
             role: "user",
             content: message
