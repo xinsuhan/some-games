@@ -151,6 +151,7 @@ h1 {
   color: var(--text);
   font-weight: 750;
   box-shadow: 0 8px 22px rgba(31, 41, 51, 0.05);
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
 }
 
 .button.primary {
@@ -260,6 +261,13 @@ section {
   border-radius: 8px;
   background: var(--panel);
   box-shadow: 0 12px 36px rgba(31, 41, 51, 0.05);
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.project-card:hover {
+  transform: translateY(-2px);
+  border-color: #c7d2da;
+  box-shadow: var(--shadow);
 }
 
 .project-card.featured {
@@ -509,6 +517,13 @@ section {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--panel);
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.contact-item:hover {
+  transform: translateY(-2px);
+  border-color: #c7d2da;
+  box-shadow: var(--shadow);
 }
 
 .contact-item span {
