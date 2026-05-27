@@ -1,105 +1,133 @@
-# Personal Website
+# Personal Website / 个人主页
 
 This is Xin Suhan's personal website for sharing a learning journey, skills, academic highlights, project practice, and a small collection of browser games. It reflects my interests as a CS / AI undergraduate student (个人主页).
 
-The site now also includes an AI Q&A Assistant that can answer questions about the website, projects, and learning content.
+本项目是个人主页站点，核心目标是：简单、稳定、可长期维护。
 
 Website: https://xinsuhan.top
 
-## Highlights
-- Bilingual homepage
-- Personal introduction and skills
-- Academic highlights
-- MCM/ICM achievement
-- Personal projects
-- Browser games collection
-- AI Q&A Assistant powered by a Vercel Serverless Function
+## 项目简介 / Overview
+- Static HTML/CSS/JS homepage (no frameworks, no build step).
+- AI Chat and OCR are provided by Serverless APIs (`/api/chat`, `/api/vision-ocr`).
+- Multiple games (2048, Snake, Minesweeper, Hextris, A Dark Room).
+- Academic assets: PDFs, certificates, images.
+- Bilingual content (EN/ZH).
 
-## Project Structure
-- index.html homepage
-- api/chat.js Vercel Serverless Function for AI chat
-- assets/ images and paper PDF
-- 2048/
-- snake/
-- minesweeper/
-- hextris/
-- dark-room/
-
-## Games
-- /2048
-- /snake
-- /minesweeper
-- /hextris
-- /dark-room
-
-## Academic Highlights
-- 2026 MCM/ICM Honorable Mention
-- Calculus I Perfect Score, 100/100
-
-MCM Paper PDF: Behind the Mirrorball: Vote Reconstruction
-
-## Student Innovation Project
-Project: 基于粒球表示学习的医学图像异常检测技术 / Medical Image Anomaly Detection with Granular-Ball Representation Learning
-
-Type: 大学生创新训练计划 / Student Innovation Training Program
-
-Tags: `Medical Image Analysis` `Anomaly Detection` `Granular-Ball Learning` `Computer Vision` `AI for Healthcare`
-
-This student innovation project explores medical image anomaly detection based on granular-ball representation learning. It aims to improve efficiency, robustness, and interpretability in the detection, segmentation, and diagnosis pipeline by using adaptive granular-ball representation, graph construction, and neural network models.
-
-本项目面向医学图像异常检测任务，探索基于粒球表示学习的高效、鲁棒、可解释的异常检测方法，尝试通过自适应粒球表示、图结构建模和神经网络模型提升检测、分割与辅助诊断流程的效率、鲁棒性与可解释性。
-
-[View Redacted Proposal](assets/dachuang-proposal-redacted.pdf)
-
-## AI Q&A Assistant
-- The frontend chat box is located between the Projects & Games section and the Contact section.
-- When a user submits a question, the frontend sends a request to `/api/chat`.
-- `/api/chat` is implemented as a Vercel Serverless Function.
-- The backend calls the DeepSeek API.
-- The default model is `deepseek-v4-flash`.
-- The API key is read from the `DEEPSEEK_API_KEY` environment variable and is never exposed to frontend JavaScript.
-
-## Environment Variables
-Create a local environment file with:
-
-```env
-DEEPSEEK_API_KEY=your_deepseek_api_key_here
+## 目录结构 / Structure
+```
+.
+├─ index.html            # Homepage entry
+├─ css/site.css          # Homepage styles
+├─ js/site.js            # Homepage logic (i18n, AI, OCR)
+├─ api/                  # Serverless APIs (Vercel)
+│  ├─ chat.js
+│  └─ vision-ocr.js
+├─ assets/               # PDFs, certificates, images
+├─ 2048/                 # 2048 game entry
+├─ snake/                # Snake game
+├─ minesweeper/          # Minesweeper game
+├─ hextris/              # Hextris game
+├─ dark-room/            # A Dark Room game
+├─ games/                # Compatibility placeholder (future migration)
+├─ js/                   # Legacy 2048 assets + site.js
+├─ style/                # Legacy 2048 styles
+└─ meta/                 # Legacy 2048 icons
 ```
 
-## Local Development
-1. Install the Vercel CLI:
+Note: `js/`, `style/`, `meta/` are still legacy assets for 2048 until the gradual migration finishes.
+
+## 本地预览 / Local Preview
+### Static preview (no AI/OCR)
+- Option A: open `index.html` directly in a browser.
+- Option B (recommended): run a simple static server if available.
+
+```bash
+python -m http.server 8000
+```
+
+Visit:
+```
+http://localhost:8000
+```
+
+### Full preview (AI/OCR enabled)
+Use Vercel Dev to run Serverless APIs locally:
 
 ```bash
 npm i -g vercel
-```
-
-2. Create `.env.local`.
-3. Add `DEEPSEEK_API_KEY`.
-4. Start the local Vercel dev server:
-
-```bash
 vercel dev
 ```
 
-5. Visit:
-
-```text
+Visit:
+```
 http://localhost:3000
 ```
 
-## Deployment
-- Custom domain: xinsuhan.top
-- Recommended deployment: Vercel.
-- GitHub Pages can host static pages only. It cannot run backend endpoints such as `/api/chat`.
-- To use the AI Q&A Assistant, deploy to Vercel or another platform that supports Serverless Functions or backend APIs.
-- In Vercel, add `DEEPSEEK_API_KEY` under Project Settings -> Environment Variables.
-- Redeploy the project after changing environment variables.
+## 部署 / Deployment
+### GitHub Pages + 自定义域名
+1. Settings -> Pages -> Deploy from branch (`main`), folder `/`.
+2. Ensure the `CNAME` file contains your domain (e.g. `www.xinsuhan.top`).
+3. DNS:
+	 - `www` -> CNAME to `<username>.github.io`
+	 - Apex domain: use provider ALIAS/ANAME or A records per GitHub Pages docs.
+
+GitHub Pages is static only, so `/api/*` will not work there.
+
+### Vercel (AI/OCR APIs)
+1. Import this repo to Vercel.
+2. Framework preset: Other (no build step).
+3. Add environment variables (see below).
+4. Deploy.
+
+API endpoints:
+- `/api/chat` (AI chat)
+- `/api/vision-ocr` (OCR)
+
+### 混合部署（静态 + API）
+- Static site on GitHub Pages / OSS / CDN.
+- API on Vercel.
+- Set `API_BASE` to the Vercel domain (see next section).
+
+## API_BASE 使用说明
+Default behavior: if `API_BASE` is empty, the frontend calls `/api/*` on the same origin (best for full Vercel deployment).
+
+To call a separate API host, set one of the following:
+
+Option A (HTML attribute):
+```html
+<html data-api-base="https://your-api.vercel.app">
+```
+
+Option B (global variable):
+```html
+<script>
+	window.API_BASE = "https://your-api.vercel.app";
+</script>
+<script defer src="./js/site.js"></script>
+```
+
+## 环境变量 / Environment Variables
+Create `.env.local` (for Vercel dev) or set in Vercel Project Settings:
+
+```env
+DEEPSEEK_API_KEY=your_deepseek_api_key_here
+DASHSCOPE_API_KEY=your_dashscope_api_key_here
+```
+
+- `DEEPSEEK_API_KEY`: required for AI chat.
+- `DASHSCOPE_API_KEY`: required for OCR.
+
+## 常见问题 / FAQ
+### PDF/图片/游戏 404
+- Confirm the file exists under `assets/` or the game folder.
+- Check case sensitivity on Linux hosts (GitHub Pages is case-sensitive).
+- Ensure links are relative (`./assets/...`, `./2048/`) when using project subpaths.
+- If using CDN/OSS, verify upload paths and clear cache.
 
 ## Security Notes
-- Never write a real API key into README files, frontend JavaScript, GitHub commits, or screenshots.
-- Keep `.env.local` in `.gitignore`.
-- The frontend should never call the DeepSeek API directly.
-- All AI requests should go through the `/api/chat` backend proxy.
+- Never commit real API keys.
+- Keep `.env.local` out of git (already ignored).
+- The frontend should never call the AI provider directly.
 
 ## License / Credits
 - Some games are integrated from open-source projects.
