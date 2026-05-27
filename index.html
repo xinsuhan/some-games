@@ -6,6 +6,9 @@
   <meta name="description" content="Xin Suhan - CS / AI student learning programming, web development, AI, and project practice." data-i18n="metaDescription">
   <title data-i18n="pageTitle">Xin Suhan | CS / AI Student</title>
   <link rel="shortcut icon" href="favicon.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
   <style>
     :root {
       --bg: #f7f7f2;
@@ -460,6 +463,12 @@
       color: #8a2f2f;
       background: #fff1f1;
       border-color: #f2c5c5;
+    }
+
+    .ai-message.thinking {
+      background: #fffaf0;
+      border-color: #f3d28a;
+      color: #7a4b00;
     }
 
     .ai-form {
@@ -1077,6 +1086,12 @@
           aiImageTooLarge: "Image is too large. Please upload a PNG, JPG, JPEG, or WEBP image under 5MB.",
           aiImageUnsupported: "Only PNG, JPG, JPEG, and WEBP images are supported for OCR.",
           aiThinking: "Thinking...",
+          aiThinkingReading: "Reading your question...",
+          aiThinkingContext: "Organizing context...",
+          aiThinkingCalling: "Calling the AI...",
+          aiThinkingGenerating: "Generating the answer, please wait...",
+          aiThinkingUploads: "Organizing uploaded content...",
+          aiThinkingElapsed: "Waiting {seconds}s",
           aiError: "The AI service is temporarily unavailable. Please try again later.",          contactTitle: "Contact",
           contactDescription: "Reach me through email, GitHub, or this personal website.",
           contactNote: "Open to learning projects, collaboration, and technical discussions.",
@@ -1200,6 +1215,12 @@
           aiImageTooLarge: "图片太大，请上传 5MB 以内的 PNG、JPG、JPEG 或 WEBP 图片。",
           aiImageUnsupported: "图片 OCR 仅支持 PNG、JPG、JPEG 和 WEBP。",
           aiThinking: "正在思考...",
+          aiThinkingReading: "正在读取问题...",
+          aiThinkingContext: "正在整理上下文...",
+          aiThinkingCalling: "正在调用 AI...",
+          aiThinkingGenerating: "正在生成回答，请稍等...",
+          aiThinkingUploads: "正在整理上传内容...",
+          aiThinkingElapsed: "已等待 {seconds} 秒",
           aiError: "AI 服务暂时不可用，请稍后再试。",          contactTitle: "联系",
           contactDescription: "可通过邮件、GitHub 或个人网站联系我。",
           contactNote: "欢迎交流学习项目、合作想法和技术问题。",
@@ -1285,6 +1306,9 @@
       const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
       const MAX_FILE_CONTEXT_CHARS = 8000;
       let fileContext = null;
+      let thinkingTimerId = null;
+      let thinkingStartTime = 0;
+      let thinkingMessage = null;
 
       function trimConversationHistory() {
         const maxMessages = MAX_HISTORY_TURNS * 2;
@@ -1365,13 +1389,91 @@
         return t("aiOcrFailed").replace("{detail}", detail || "Unknown error");
       }
 
-      function addMessage(text, type) {
+      function renderMessageContent(text) {
+        return String(text || "");
+      }
+
+      function applyMathRender(target) {
+        if (!target || typeof window.renderMathInElement !== "function") {
+          return;
+        }
+        try {
+          window.renderMathInElement(target, {
+            delimiters: [
+              { left: "$$", right: "$$", display: true },
+              { left: "\\[", right: "\\]", display: true },
+              { left: "\\(", right: "\\)", display: false },
+              { left: "$", right: "$", display: false }
+            ],
+            throwOnError: false
+          });
+        } catch (error) {
+          console.warn("KaTeX render failed:", error);
+        }
+      }
+
+      function setMessageContent(message, text, shouldRender) {
+        const safeText = renderMessageContent(text);
+        message.textContent = safeText;
+        if (shouldRender) {
+          applyMathRender(message);
+        }
+      }
+
+      function addMessage(text, type, shouldRender) {
         const message = document.createElement("p");
         message.className = `ai-message ${type || ""}`.trim();
-        message.textContent = text;
+        message.textContent = renderMessageContent(text);
         chat.appendChild(message);
+        if (shouldRender) {
+          applyMathRender(message);
+        }
         chat.scrollTop = chat.scrollHeight;
         return message;
+      }
+
+      function getThinkingStage(elapsedSeconds) {
+        if (fileContext && fileContext.content) {
+          return t("aiThinkingUploads");
+        }
+        if (elapsedSeconds < 1) {
+          return t("aiThinkingReading");
+        }
+        if (elapsedSeconds < 3) {
+          return t("aiThinkingContext");
+        }
+        if (elapsedSeconds < 6) {
+          return t("aiThinkingCalling");
+        }
+        return t("aiThinkingGenerating");
+      }
+
+      function updateThinkingStatus() {
+        if (!thinkingMessage) {
+          return;
+        }
+        const elapsedSeconds = (Date.now() - thinkingStartTime) / 1000;
+        const stage = getThinkingStage(elapsedSeconds);
+        const elapsedText = t("aiThinkingElapsed").replace("{seconds}", elapsedSeconds.toFixed(1));
+        thinkingMessage.textContent = `${stage}\n${elapsedText}`;
+      }
+
+      function startThinkingStatus() {
+        stopThinkingStatus();
+        thinkingStartTime = Date.now();
+        thinkingMessage = addMessage("", "thinking");
+        updateThinkingStatus();
+        thinkingTimerId = window.setInterval(updateThinkingStatus, 100);
+        return thinkingMessage;
+      }
+
+      function stopThinkingStatus() {
+        if (thinkingTimerId) {
+          window.clearInterval(thinkingTimerId);
+          thinkingTimerId = null;
+        }
+        thinkingStartTime = 0;
+        thinkingMessage = null;
       }
 
       if (fileInput) {
@@ -1492,11 +1594,11 @@
             return;
           }
 
-          addMessage(message, "user");
+          addMessage(message, "user", false);
           input.value = "";
           input.disabled = true;
           sendButton.disabled = true;
-          const thinking = addMessage(t("aiThinking"));
+          const thinking = startThinkingStatus();
           const history = conversationMessages.slice();
 
           try {
@@ -1517,14 +1619,16 @@
               throw new Error("Empty chat response");
             }
 
-            thinking.textContent = data.reply;
+            stopThinkingStatus();
+            setMessageContent(thinking, data.reply, true);
             conversationMessages.push(
               { role: "user", content: message },
               { role: "assistant", content: data.reply }
             );
             trimConversationHistory();
           } catch (error) {
-            thinking.textContent = t("aiError");
+            stopThinkingStatus();
+            setMessageContent(thinking, t("aiError"), false);
             thinking.classList.add("error");
           } finally {
             input.disabled = false;
