@@ -280,6 +280,14 @@
 
   const buttons = Array.from(document.querySelectorAll("[data-lang-option]"));
   const themeButton = document.getElementById("theme-toggle");
+  const projectSearch = {
+    root: document.querySelector(".project-search"),
+    input: document.getElementById("project-search-input"),
+    clearButton: document.getElementById("project-search-clear"),
+    empty: document.getElementById("project-search-empty"),
+    cards: Array.from(document.querySelectorAll("#projects .project-card")),
+    items: []
+  };
   const systemThemeQuery = typeof window.matchMedia === "function"
     ? window.matchMedia("(prefers-color-scheme: dark)")
     : { matches: false };
@@ -342,6 +350,83 @@
     }
   }
 
+  function normalizeSearchText(value) {
+    return String(value || "")
+      .normalize("NFKC")
+      .trim()
+      .toLocaleLowerCase();
+  }
+
+  function getElementText(element, selector) {
+    return Array.from(element.querySelectorAll(selector))
+      .map((node) => node.textContent || "")
+      .join(" ");
+  }
+
+  function buildProjectSearchIndex() {
+    projectSearch.items = projectSearch.cards.map((card) => {
+      const title = getElementText(card, "h3");
+      const description = getElementText(card, "p");
+      const tags = getElementText(card, ".tag");
+      const haystack = normalizeSearchText([title, description, tags].join(" "));
+      return { card, title, description, tags, haystack };
+    });
+  }
+
+  function filterProjects() {
+    if (!projectSearch.input) {
+      return;
+    }
+
+    const query = normalizeSearchText(projectSearch.input.value);
+    let visibleCount = 0;
+
+    projectSearch.items.forEach((item) => {
+      const isVisible = !query || item.haystack.includes(query);
+      item.card.hidden = !isVisible;
+      if (isVisible) {
+        visibleCount += 1;
+      }
+    });
+
+    if (projectSearch.root) {
+      projectSearch.root.classList.toggle("has-query", Boolean(query));
+    }
+    if (projectSearch.empty) {
+      projectSearch.empty.hidden = !query || visibleCount > 0;
+    }
+  }
+
+  function clearProjectSearch() {
+    if (!projectSearch.input) {
+      return;
+    }
+    projectSearch.input.value = "";
+    filterProjects();
+    projectSearch.input.focus();
+  }
+
+  function initializeProjectSearch() {
+    if (!projectSearch.input || !projectSearch.cards.length) {
+      return;
+    }
+
+    buildProjectSearchIndex();
+    projectSearch.input.addEventListener("input", filterProjects);
+    projectSearch.input.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && projectSearch.input.value) {
+        event.preventDefault();
+        clearProjectSearch();
+      }
+    });
+
+    if (projectSearch.clearButton) {
+      projectSearch.clearButton.addEventListener("click", clearProjectSearch);
+    }
+
+    filterProjects();
+  }
+
   function normalizeLang(value) {
     return value === "zh" ? "zh" : "en";
   }
@@ -382,6 +467,8 @@
       button.classList.toggle("active", isActive);
       button.setAttribute("aria-pressed", isActive ? "true" : "false");
     });
+    buildProjectSearchIndex();
+    filterProjects();
   }
 
   function setLanguage(lang, persist) {
@@ -403,6 +490,7 @@
   });
 
   initializeTheme();
+  initializeProjectSearch();
 
   const chat = document.getElementById("ai-chat");
   const form = document.getElementById("ai-form");

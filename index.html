@@ -203,6 +203,22 @@
         </p>
       </div>
 
+      <div class="project-search" role="search" aria-label="Project search">
+        <label class="project-search-label" for="project-search-input">Search projects</label>
+        <div class="project-search-box">
+          <span class="project-search-icon" aria-hidden="true">⌕</span>
+          <input
+            class="project-search-input"
+            id="project-search-input"
+            type="search"
+            autocomplete="off"
+            placeholder="Search projects by name, description, or tag"
+          >
+          <button class="project-search-clear" id="project-search-clear" type="button" aria-label="Clear project search">×</button>
+        </div>
+        <p class="project-search-empty" id="project-search-empty" hidden>未找到相关项目</p>
+      </div>
+
       <div class="project-grid">
         <article class="project-card featured">
           <div class="tag-row">
