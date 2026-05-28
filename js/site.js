@@ -3,7 +3,7 @@
   const THEME_STORAGE_KEY = "homeTheme";
   const API_BASE = (window.API_BASE || document.documentElement.getAttribute("data-api-base") || "").trim();
   const API_ROOT = API_BASE ? API_BASE.replace(/\/$/, "") : "";
-  const IS_API_CONFIGURED = Boolean(API_ROOT);
+  const IS_API_CONFIGURED = window.location.protocol !== "file:";
   const reducedMotionQuery = typeof window.matchMedia === "function"
     ? window.matchMedia("(prefers-reduced-motion: reduce)")
     : { matches: false };
@@ -50,10 +50,10 @@
     if (!path) {
       return API_ROOT || "";
     }
-    if (!API_ROOT) {
-      return "";
+    if (API_ROOT) {
+      return path.startsWith("/") ? `${API_ROOT}${path}` : `${API_ROOT}/${path}`;
     }
-    return path.startsWith("/") ? `${API_ROOT}${path}` : `${API_ROOT}/${path}`;
+    return path.startsWith("/") ? path : `/${path}`;
   }
   const translations = {
     en: {
@@ -156,6 +156,10 @@
         "A research project on granular-ball representation learning for medical image anomaly detection.",
       buttonViewRedacted: "View Proposal",
       playableTag: "Playable",
+      doudizhuTitle: "Dou Dizhu",
+      doudizhuDescription: "A classic three-player card game you can play against AI opponents in the browser.",
+      pathDoudizhu: "Path: /doudizhu",
+      buttonPlayDoudizhu: "Play Dou Dizhu",
       game2048Title: "2048 Game",
       game2048Description:
         "The original 2048 browser game is preserved here with keyboard controls, scoring, best score, and restart support.",
@@ -259,7 +263,7 @@
       aiThinkingUploads: "Organizing uploaded content...",
       aiThinkingElapsed: "Waiting {seconds}s",
       aiError: "The AI service is temporarily unavailable. Please try again later.",
-      aiUnavailable: "AI and OCR are unavailable because no API base is configured.",
+      aiUnavailable: "AI features are temporarily unavailable.",
       aiInputLabel: "Ask the AI assistant",
       aiAttachFileLabel: "Attach a text or markdown file",
       aiAttachImageLabel: "Upload an image for OCR",
@@ -370,6 +374,10 @@
         "基于粒球表示学习的医学图像异常检测研究项目。",
       buttonViewRedacted: "查看脱敏申报书",
       playableTag: "可游玩",
+      doudizhuTitle: "斗地主",
+      doudizhuDescription: "经典三人扑克玩法，支持与 AI 对战的浏览器版本。",
+      pathDoudizhu: "路径：/doudizhu",
+      buttonPlayDoudizhu: "开始斗地主",
       game2048Title: "2048 游戏",
       game2048Description: "保留原版 2048 浏览器游戏，支持键盘操控、计分、最高分与重开。",
       path2048: "路径：/2048",
@@ -463,7 +471,7 @@
       aiThinkingUploads: "正在整理上传内容...",
       aiThinkingElapsed: "已等待 {seconds} 秒",
       aiError: "AI 服务暂时不可用，请稍后再试。",
-      aiUnavailable: "尚未配置 API 地址，AI 与 OCR 功能暂不可用。",
+      aiUnavailable: "AI 功能暂时不可用。",
       aiInputLabel: "向 AI 助手提问",
       aiAttachFileLabel: "上传文本或 Markdown 文件",
       aiAttachImageLabel: "上传图片进行 OCR",
