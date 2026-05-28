@@ -288,6 +288,8 @@
     cards: Array.from(document.querySelectorAll("#projects .project-card")),
     items: []
   };
+  const giscusThread = document.getElementById("giscus-thread");
+  let isGiscusLoaded = false;
   const systemThemeQuery = typeof window.matchMedia === "function"
     ? window.matchMedia("(prefers-color-scheme: dark)")
     : { matches: false };
@@ -325,6 +327,8 @@
       themeButton.setAttribute("aria-pressed", normalized === "dark" ? "true" : "false");
       themeButton.dataset.themeTarget = nextTheme;
     }
+
+    syncGiscusTheme(normalized);
   }
 
   function initializeTheme() {
@@ -427,6 +431,73 @@
     filterProjects();
   }
 
+  function getGiscusTheme(theme) {
+    return theme === "dark" ? "dark" : "light";
+  }
+
+  function currentTheme() {
+    return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+  }
+
+  function syncGiscusTheme(theme) {
+    const iframe = document.querySelector("iframe.giscus-frame");
+    if (!iframe) {
+      return;
+    }
+
+    iframe.contentWindow.postMessage({
+      giscus: {
+        setConfig: {
+          theme: getGiscusTheme(theme)
+        }
+      }
+    }, "https://giscus.app");
+  }
+
+  function loadGiscus() {
+    if (!giscusThread || isGiscusLoaded) {
+      return;
+    }
+
+    isGiscusLoaded = true;
+    const script = document.createElement("script");
+    script.src = "https://giscus.app/client.js";
+    script.async = true;
+    script.crossOrigin = "anonymous";
+    script.setAttribute("data-repo", giscusThread.dataset.repo || "");
+    script.setAttribute("data-repo-id", giscusThread.dataset.repoId || "");
+    script.setAttribute("data-category", giscusThread.dataset.category || "");
+    script.setAttribute("data-category-id", giscusThread.dataset.categoryId || "");
+    script.setAttribute("data-mapping", giscusThread.dataset.mapping || "pathname");
+    script.setAttribute("data-strict", giscusThread.dataset.strict || "0");
+    script.setAttribute("data-reactions-enabled", giscusThread.dataset.reactionsEnabled || "1");
+    script.setAttribute("data-emit-metadata", giscusThread.dataset.emitMetadata || "0");
+    script.setAttribute("data-input-position", giscusThread.dataset.inputPosition || "bottom");
+    script.setAttribute("data-theme", getGiscusTheme(currentTheme()));
+    script.setAttribute("data-lang", giscusThread.dataset.lang || "zh-CN");
+    script.setAttribute("data-loading", "lazy");
+    giscusThread.appendChild(script);
+  }
+
+  function initializeGiscus() {
+    if (!giscusThread) {
+      return;
+    }
+
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver((entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          loadGiscus();
+          observer.disconnect();
+        }
+      }, { rootMargin: "240px 0px" });
+      observer.observe(giscusThread);
+      return;
+    }
+
+    loadGiscus();
+  }
+
   function normalizeLang(value) {
     return value === "zh" ? "zh" : "en";
   }
@@ -491,6 +562,7 @@
 
   initializeTheme();
   initializeProjectSearch();
+  initializeGiscus();
 
   const chat = document.getElementById("ai-chat");
   const form = document.getElementById("ai-form");

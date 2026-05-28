@@ -745,6 +745,25 @@ section {
   overflow-wrap: anywhere;
 }
 
+.guestbook-section {
+  padding-top: 0;
+}
+
+.guestbook-card {
+  min-height: 180px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  box-shadow: 0 12px 36px rgba(31, 41, 51, 0.05);
+  transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.guestbook-card .giscus,
+.guestbook-card .giscus-frame {
+  width: 100%;
+}
+
 footer {
   border-top: 1px solid var(--line);
   padding: 24px 0 34px;
