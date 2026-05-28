@@ -59,7 +59,7 @@
       mcmTag: "MCM / ICM",
       mcmTitle: "2026 MCM/ICM — Honorable Mention",
       mcmDescription:
-        "Awarded Honorable Mention in the 2026 Mathematical Contest in Modeling for research on voting fairness and reconstruction in Dancing with the Stars.",
+        "Honorable Mention in the 2026 Mathematical Contest in Modeling (MCM/ICM). Certificate and paper available below.",
       mcmKeywords: "Mathematical Modeling · Fairness Analysis · Vote Reconstruction",
       buttonViewCertificate: "View Certificate",
       buttonReadPaper: "Read Paper",
@@ -74,9 +74,9 @@
       projectTagFairness: "Fairness Analysis",
       projectTagVote: "Vote Reconstruction",
       projectTagReplay: "Counterfactual Replay",
-      mcmProjectTitle: "MCM Vote Reconstruction Project",
+      mcmProjectTitle: "Vote Reconstruction & Fairness Analysis",
       mcmProjectDescription:
-        "A mathematical modeling project that builds a reconstruction–replay–redesign framework to analyze voting fairness in Dancing with the Stars.",
+        "Reconstructing latent fan votes, comparing aggregation rules, and evaluating fairness in a hybrid voting system.",
       dachuangTagInnovation: "Student Innovation",
       dachuangTagMedical: "Medical Image Analysis",
       dachuangTagGranular: "Granular-Ball Learning",
@@ -190,7 +190,7 @@
       mcmTag: "MCM / ICM",
       mcmTitle: "2026 MCM/ICM — 优秀奖",
       mcmDescription:
-        "在 2026 年美国大学生数学建模竞赛中获得优秀奖，研究主题为《与星共舞》的投票公平与重建。",
+        "在 2026 年美国大学生数学建模竞赛中获得优秀奖，证书与论文可在下方查看。",
       mcmKeywords: "数学建模 · 公平性分析 · 投票重构",
       buttonViewCertificate: "查看证书",
       buttonReadPaper: "阅读论文",
@@ -204,9 +204,9 @@
       projectTagFairness: "公平性分析",
       projectTagVote: "投票重构",
       projectTagReplay: "反事实重放",
-      mcmProjectTitle: "美赛投票重构与公平性分析项目",
+      mcmProjectTitle: "投票重构与公平性分析",
       mcmProjectDescription:
-        "一个数学建模项目，通过“重构—重放—重设计”框架分析 Dancing with the Stars 中的投票公平性问题。",
+        "重构潜在粉丝投票、比较不同聚合规则，并评估混合投票体系中的公平性。",
       dachuangTagInnovation: "大创项目",
       dachuangTagMedical: "医学图像分析",
       dachuangTagGranular: "粒球表示学习",
