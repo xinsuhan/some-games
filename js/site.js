@@ -284,6 +284,7 @@
     root: document.querySelector(".project-search"),
     input: document.getElementById("project-search-input"),
     clearButton: document.getElementById("project-search-clear"),
+    count: document.getElementById("project-search-count"),
     empty: document.getElementById("project-search-empty"),
     cards: Array.from(document.querySelectorAll("#projects .project-card")),
     items: []
@@ -367,13 +368,68 @@
       .join(" ");
   }
 
+  function clearProjectHighlights() {
+    projectSearch.cards.forEach((card) => {
+      card.querySelectorAll(".project-search-match").forEach((match) => {
+        match.replaceWith(document.createTextNode(match.textContent || ""));
+      });
+      card.normalize();
+    });
+  }
+
   function buildProjectSearchIndex() {
+    clearProjectHighlights();
     projectSearch.items = projectSearch.cards.map((card) => {
       const title = getElementText(card, "h3");
       const description = getElementText(card, "p");
       const tags = getElementText(card, ".tag");
       const haystack = normalizeSearchText([title, description, tags].join(" "));
-      return { card, title, description, tags, haystack };
+      const highlightTargets = Array.from(card.querySelectorAll("h3, p, .tag"));
+      return { card, title, description, tags, haystack, highlightTargets };
+    });
+  }
+
+  function escapeRegExp(value) {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
+  function highlightTextElement(element, query) {
+    if (!query) {
+      return;
+    }
+
+    const text = element.textContent || "";
+    const pattern = new RegExp(`(${escapeRegExp(query)})`, "giu");
+    const fragment = document.createDocumentFragment();
+    let cursor = 0;
+    let match;
+
+    while ((match = pattern.exec(text)) !== null) {
+      if (match.index > cursor) {
+        fragment.appendChild(document.createTextNode(text.slice(cursor, match.index)));
+      }
+
+      const mark = document.createElement("mark");
+      mark.className = "project-search-match";
+      mark.textContent = match[0];
+      fragment.appendChild(mark);
+      cursor = match.index + match[0].length;
+    }
+
+    if (cursor === 0) {
+      return;
+    }
+
+    if (cursor < text.length) {
+      fragment.appendChild(document.createTextNode(text.slice(cursor)));
+    }
+
+    element.replaceChildren(fragment);
+  }
+
+  function highlightProject(item, query) {
+    item.highlightTargets.forEach((target) => {
+      highlightTextElement(target, query);
     });
   }
 
@@ -383,18 +439,28 @@
     }
 
     const query = normalizeSearchText(projectSearch.input.value);
+    const rawQuery = projectSearch.input.value.trim();
     let visibleCount = 0;
 
+    clearProjectHighlights();
     projectSearch.items.forEach((item) => {
       const isVisible = !query || item.haystack.includes(query);
       item.card.hidden = !isVisible;
       if (isVisible) {
         visibleCount += 1;
+        if (query) {
+          highlightProject(item, rawQuery);
+        }
       }
     });
 
     if (projectSearch.root) {
       projectSearch.root.classList.toggle("has-query", Boolean(query));
+    }
+    if (projectSearch.count) {
+      projectSearch.count.textContent = query
+        ? `${visibleCount} / ${projectSearch.items.length} projects`
+        : `${projectSearch.items.length} projects`;
     }
     if (projectSearch.empty) {
       projectSearch.empty.hidden = !query || visibleCount > 0;
